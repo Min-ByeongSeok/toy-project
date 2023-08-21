@@ -1,0 +1,10 @@
+POST http://localhost:8080/fifa/signup
+Content-Type: application/json
+
+{
+  "name": "messi",
+  "userId": "lm10",
+  "password": "1234"
+}
+
+###
