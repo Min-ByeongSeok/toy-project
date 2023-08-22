@@ -23,8 +23,9 @@ public class SignIn {
         private String token;
         private String message;
 
-        public static Response fromDto(Member member){
+        public static Response fromDto(Member member, String token){
             return Response.builder()
+                    .token(token)
                     .message(String.format("%s님 반갑습니다.", member.getName()))
                     .build();
         }

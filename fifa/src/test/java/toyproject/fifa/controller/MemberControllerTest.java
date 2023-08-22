@@ -1,5 +1,6 @@
 package toyproject.fifa.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import toyproject.fifa.controller.MemberController;
 import toyproject.fifa.domain.Member;
+import toyproject.fifa.dto.SignIn;
 import toyproject.fifa.dto.SignUp;
 import toyproject.fifa.security.TokenProvider;
 import toyproject.fifa.service.MemberService;
@@ -68,12 +70,30 @@ class MemberControllerTest {
     }
 
     @Test
+//    @WithMockUser(username = "cr7", password = "1234", roles = {"USER"})
+    @WithMockUser
     @DisplayName("로그인 성공")
-    void success_signin() {
+    void success_signin() throws Exception {
         // given
+        Member member = Member.builder()
+                .name("ronaldo")
+                .userId("cr7")
+                .password("1234")
+                .build();
 
+        String token = "token";
+
+        given(memberService.signin(any())).willReturn(member);
+        given(tokenProvider.generateToken(anyString(), anyList())).willReturn(token);
         // when
-
         // then
+        mockMvc.perform(post("/fifa/signin").with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SignUp.Request("ronaldo", "cr7", "1234"))))
+                .andDo(print())
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.token").value(token))
+                .andExpect(jsonPath("$.message").value("ronaldo님 반갑습니다."));
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import toyproject.fifa.type.Authority;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class Member implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_uuid")
     private Long uuid;
 
     private String name;
@@ -46,7 +48,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.userId;
     }
 
     @Override
